@@ -1,12 +1,12 @@
 ---
 
-- name: Honolulu Cat
+- name: Configure instance
   hosts: all
   gather_facts: False
   become: true
   vars:
-    hostname: honolulu-cateyes
-    tz: America/Honolulu
+    hostname: taranto-cateyes
+    tz: Pacific/Honolulu
     token: T04NJ722U/BQB4MBBHV/RZPNWsz38MD1WtuVcena5reb
     
   tasks:
@@ -14,5 +14,17 @@
       timezone:
         name: "{{ tz }}"
     - name: Display new timezone
-      shell: date +%Z 
-      
+      shell: date +%Z     
+    
+    - name: Set hostname
+      hostname:
+        name: "{{ hostname }}"
+          
+    - name: Dump host facts
+      setup: 
+
+    - name: Send host config notification
+      slack:
+        token: "{{ token }}"
+        msg: "Host {{ hostname }} is now in {{ tz }}"
+     
